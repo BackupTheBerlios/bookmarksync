@@ -1,4 +1,4 @@
-package de.andy.bookmark;
+package de.andy.bookmark.data;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,9 +20,11 @@ public class Bookmark {
 	//....................
 	
 	
-	private String name;
+	private String name = "";
 	private String id;
-	private String description;
+	private String description = "";
+	private String shortcuturl = "";
+	private String icon_data = "";
 	private URL url;
 	private Date lastmodified;
 	private Date added;
@@ -112,6 +114,18 @@ public class Bookmark {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public String getIcon_data() {
+		return icon_data;
+	}
+	public void setIcon_data(String icon_data) {
+		this.icon_data = icon_data;
+	}
+	public String getShortcuturl() {
+		return shortcuturl;
+	}
+	public void setShortcuturl(String shortcuturl) {
+		this.shortcuturl = shortcuturl;
 	}
 
 }

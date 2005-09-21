@@ -17,9 +17,11 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import de.andy.bookmark.Bookmark;
-import de.andy.bookmark.BookmarkCollection;
-import de.andy.bookmark.FirefoxImporter;
+import de.andy.bookmark.data.Bookmark;
+import de.andy.bookmark.data.BookmarkCollection;
+import de.andy.bookmark.data.Folder;
+import de.andy.bookmark.importer.FirefoxImporter;
+import de.andy.bookmark.importer.ImporterException;
 import de.andy.bookmark.model.BookmarkTreeCellRenderer;
 import de.andy.bookmark.model.BookmarkTreeModel;
 
@@ -120,8 +122,14 @@ public class BookmarkViewer extends JFrame implements TreeSelectionListener {
 			txt_file.setText(current_file.getAbsolutePath());
 			new Thread(new Runnable() {
 				public void run() {			
-					bookmarks = new FirefoxImporter().getBookmarks(current_file);
-					model.setBookmarkCollection(bookmarks);
+					try {
+						bookmarks = new FirefoxImporter().getBookmarks(current_file);
+						model.setBookmarkCollection(bookmarks);
+						l_bookmarks.invalidate();
+					} catch (ImporterException e) {
+						e.printStackTrace();
+						model.setBookmarkCollection(null);
+					}
 				}}).start();
 		}
 		else {
@@ -136,14 +144,29 @@ public class BookmarkViewer extends JFrame implements TreeSelectionListener {
 	
 	public void valueChanged(TreeSelectionEvent e) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) l_bookmarks.getSelectionPath().getLastPathComponent();
-		if (node.isLeaf()) {
-			if (node.getUserObject() instanceof Bookmark)
-				showBookmarkDetails((Bookmark)node.getUserObject());
-		}
+		if (node.getUserObject() instanceof Bookmark)
+			showBookmarkDetails((Bookmark)node.getUserObject());
+		if (node.getUserObject() instanceof Folder)
+			showFolderDetails((Folder)node.getUserObject());
+	}
+
+	private void showFolderDetails(Folder folder) {
+		System.out.println("--- Folder: "+folder.getName()+" ---");		
+		System.out.println("ID: "+folder.getId());
+//		System.out.println("Added: "+folder.getAdded());
+//		System.out.println("Lastmodified: "+folder.getLastmodified());
+		System.out.println("Description: "+folder.getDescription());
+		System.out.println("--- E N D ---");
 	}
 
 	private void showBookmarkDetails(Bookmark bookmark) {
-		//
+		System.out.println("--- Bookmark: "+bookmark.getName()+" ---");
+		System.out.println("Url: "+bookmark.getUrl());		
+		System.out.println("ID: "+bookmark.getId());
+		System.out.println("Added: "+bookmark.getAdded());
+		System.out.println("Lastmodified: "+bookmark.getLastmodified());
+		System.out.println("Description: "+bookmark.getDescription());
+		System.out.println("--- E N D ---");
 	}
 	
 	

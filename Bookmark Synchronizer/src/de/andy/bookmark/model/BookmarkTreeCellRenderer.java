@@ -8,7 +8,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import de.andy.bookmark.Bookmark;
+import de.andy.bookmark.data.Bookmark;
 
 public class BookmarkTreeCellRenderer extends DefaultTreeCellRenderer {
 

@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import de.andy.bookmark.Folder;
+import de.andy.bookmark.data.Folder;
 
 /**
  * Pool for DefaultMutableTreeNode with Folders in it.

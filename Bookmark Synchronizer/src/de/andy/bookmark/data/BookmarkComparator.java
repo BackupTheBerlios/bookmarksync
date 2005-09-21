@@ -1,4 +1,4 @@
-package de.andy.bookmark;
+package de.andy.bookmark.data;
 
 import java.util.Comparator;
 

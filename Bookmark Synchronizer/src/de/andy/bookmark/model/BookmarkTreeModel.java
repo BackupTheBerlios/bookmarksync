@@ -8,8 +8,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import de.andy.bookmark.Bookmark;
-import de.andy.bookmark.BookmarkCollection;
+import de.andy.bookmark.data.Bookmark;
+import de.andy.bookmark.data.BookmarkCollection;
 
 public class BookmarkTreeModel implements TreeModel {
 	
@@ -53,13 +53,15 @@ public class BookmarkTreeModel implements TreeModel {
 	public void setBookmarkCollection(BookmarkCollection coll) {
 		root.removeAllChildren();
 		//add Bookmarks
-		Iterator iter = coll.iterator();
-		if (!iter.hasNext()) root.setUserObject("No Bookmarks here");
-		else root.setUserObject(coll.getName());
-		while (iter.hasNext()) {
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(iter.next());
-			findParent(node).add(node);
-		}
+		if (coll != null) {
+			Iterator iter = coll.iterator();
+			if (!iter.hasNext()) root.setUserObject("No Bookmarks here");
+			else root.setUserObject(coll.getName());
+			while (iter.hasNext()) {
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(iter.next());
+				findParent(node).add(node);
+			}
+		} else root.setUserObject("No Bookmarks here");
 		imodel.nodeStructureChanged(root);
 	}
 

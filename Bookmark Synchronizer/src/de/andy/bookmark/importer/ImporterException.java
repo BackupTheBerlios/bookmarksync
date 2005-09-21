@@ -1,4 +1,4 @@
-package de.andy.bookmark;
+package de.andy.bookmark.importer;
 
 public class ImporterException extends Exception {
 

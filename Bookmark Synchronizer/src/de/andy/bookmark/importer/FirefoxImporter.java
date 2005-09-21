@@ -1,9 +1,6 @@
-package de.andy.bookmark;
+package de.andy.bookmark.importer;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Date;
 import java.util.Stack;
 
@@ -15,18 +12,38 @@ import org.htmlparser.tags.DoctypeTag;
 import org.htmlparser.util.NodeIterator;
 import org.htmlparser.util.ParserException;
 
+import de.andy.bookmark.data.Bookmark;
+import de.andy.bookmark.data.BookmarkCollection;
+import de.andy.bookmark.data.Folder;
 
+/**
+ * This class provides the importing of the bookmarks out of a bookmark 
+ * file of Firefox. You should use getBookmarks(File) and you get a 
+ * BookmarkCollection.
+ * 
+ * Attributes not read:
+ * - LAST_CHARSET
+ * 
+ * @author Andreas
+ *
+ */
 public class FirefoxImporter {
 	
 	private static final boolean DEBUG = false;
+	private static final int NONE = 0;
+	private static final int NEW_BOOKMARK = 1;
+	private static final int NEW_FOLDER = 2;
 	private Folder currentFolder = null;
 	private Bookmark currentBookmark = null;
 	private Stack folderStack = new Stack();
+	private int lastAction = NONE;
 	private int currentDepth = -1;
 	private BookmarkCollection bookmarks = new BookmarkCollection();
 
-	public BookmarkCollection getBookmarks(File f) {
+	public BookmarkCollection getBookmarks(File f) throws ImporterException {
 		if (DEBUG) System.out.println("Parsing "+f.getName()+": ");
+		if (!f.exists()) throw new ImporterException("File not found.");
+		if (!f.canRead()) throw new ImporterException("File not readable.");
 		bookmarks = new BookmarkCollection();
 		try {
 			Parser parser = new Parser(f.getAbsolutePath());
@@ -62,16 +79,27 @@ public class FirefoxImporter {
 				}
 			}
 		} catch (ParserException e) {
-			e.printStackTrace();
-		} catch (ImporterException e) {
-			e.printStackTrace();
+			throw new ImporterException(e.getMessage());
 		}
 		return bookmarks;
 	  }
 
 
 	private void processDesc(TagNode tn, Node node) {
-		//		
+		if (node instanceof TextNode) {
+			String desc = ((TextNode)node).getText();
+			switch (lastAction) {
+			case NEW_BOOKMARK:
+				currentBookmark.setDescription(desc);
+				break;
+			case NEW_FOLDER:
+				currentFolder.setDescription(desc);
+				break;
+			default:
+				break;
+			}
+			lastAction = NONE;
+		}
 	}
 
 
@@ -82,9 +110,11 @@ public class FirefoxImporter {
 				currentFolder = (Folder)obj;
 			} else currentFolder = null;
 			currentDepth--;
+			lastAction = NONE;
 		}
 		else {
 			currentDepth++;
+			lastAction = NONE;
 		}
 	}
 	
@@ -94,10 +124,15 @@ public class FirefoxImporter {
 			folderStack.push(currentFolder);
 			String id = tn.getAttribute("ID");
 			String toolbar = tn.getAttribute("PERSONAL_TOOLBAR_FOLDER");
+			Date d_added = getDate(tn.getAttribute("ADD_DATE"));
+			Date d_lm = getDate(tn.getAttribute("LAST_MODIFIED"));
 			currentFolder = new Folder(t.getText());
 			currentFolder.setId(id);
 			currentFolder.setToolbarFolder("true".equalsIgnoreCase(toolbar));
+			currentFolder.setAdded(d_added);
+			currentFolder.setLastmodified(d_lm);
 			if (DEBUG) System.out.println(currentFolder);
+			lastAction = NEW_FOLDER;
 		}		 
 	}
 
@@ -107,6 +142,8 @@ public class FirefoxImporter {
 			String url = t.getAttribute("HREF");
 			String name = t.getChildren().asString();
 			String id = t.getAttribute("ID");
+			String shortcuturl = t.getAttribute("");
+			String icon_data = t.getAttribute("ICON");
 			if (DEBUG) System.out.println(name+" --> "+url+" ");
 			Date d_added = getDate(t.getAttribute("ADD_DATE"));
 			Date d_lm = getDate(t.getAttribute("LAST_MODIFIED"));
@@ -116,16 +153,21 @@ public class FirefoxImporter {
 			b.setDepth(currentDepth);
 			b.setFolder(currentFolder);
 			b.setId(id);
+			b.setIcon_data(icon_data);
+			b.setShortcuturl(shortcuturl);
 			if (folderStack.size() > 0)
 				b.setParentFolder((Folder)folderStack.lastElement());
 			bookmarks.add(b);
+			currentBookmark = b;
+			lastAction = NEW_BOOKMARK;
 		}
 	}
 
 	private Date getDate(String attribute) {
 		if (attribute == null) return new Date();
 		long timestamp = Long.parseLong(attribute);
-		Date d = new Date(timestamp);
+		//timestamp is without milliseconds!
+		Date d = new Date(timestamp*1000);
 		return d;
 	}
 	
@@ -145,11 +187,5 @@ public class FirefoxImporter {
 		else throw new ImporterException("Not a firefox-bookmark-file!");
 	}
 	
-	//only for testing
-	public static void main(String[] args) {
-		FirefoxImporter importer = new FirefoxImporter();
-		BookmarkCollection bookmarks = importer.getBookmarks(new File("bookmarks2.html"));
-		bookmarks.printAll();
-	}
 }
 	
