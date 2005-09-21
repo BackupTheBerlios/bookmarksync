@@ -54,6 +54,8 @@ public class BookmarkTreeModel implements TreeModel {
 		root.removeAllChildren();
 		//add Bookmarks
 		Iterator iter = coll.iterator();
+		if (!iter.hasNext()) root.setUserObject("No Bookmarks here");
+		else root.setUserObject(coll.getName());
 		while (iter.hasNext()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(iter.next());
 			findParent(node).add(node);
@@ -65,15 +67,15 @@ public class BookmarkTreeModel implements TreeModel {
 		DefaultMutableTreeNode superparent;
 		DefaultMutableTreeNode parent = root;
 		Bookmark b = (Bookmark)node.getUserObject();
-		if (b.getFoldername() == null) return root;
-		if (b.getParent() != null) {
-			parent = FolderNode.getNodeForFolder(b.getFoldername());
-			superparent = FolderNode.getNodeForFolder(b.getParent());
+		if (b.getFolder() == null) return root;
+		if (b.getParentFolder() != null) {
+			parent = FolderNode.getNodeForFolder(b.getFolder());
+			superparent = FolderNode.getNodeForFolder(b.getParentFolder());
 			if (superparent.getIndex(parent) == -1) {
 				superparent.add(parent);
 			}
 		} else {
-			parent = FolderNode.getNodeForFolder(b.getFoldername());
+			parent = FolderNode.getNodeForFolder(b.getFolder());
 			if (root.getIndex(parent) == -1) root.add(parent);
 		}
 		return parent;

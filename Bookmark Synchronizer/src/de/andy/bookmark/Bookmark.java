@@ -21,11 +21,13 @@ public class Bookmark {
 	
 	
 	private String name;
+	private String id;
+	private String description;
 	private URL url;
 	private Date lastmodified;
 	private Date added;
-	private Folder foldername;
-	private Folder parent;
+	private Folder folder;
+	private Folder parentFolder;	
 	private int depth = 0;
 	private int checkflag = UNCHECKED;
 //	private byte[] data;
@@ -41,8 +43,7 @@ public class Bookmark {
 		try {
 			this.url = new URL(url);
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//
 		}
 	}
 	public Date getAdded() {
@@ -57,11 +58,11 @@ public class Bookmark {
 	public void setDepth(int depth) {
 		this.depth = depth;
 	}
-	public Folder getFoldername() {
-		return foldername;
+	public Folder getFolder() {
+		return folder;
 	}
-	public void setFoldername(Folder currentFolder) {
-		this.foldername = currentFolder;
+	public void setFolder(Folder currentFolder) {
+		this.folder = currentFolder;
 	}
 	public Date getLastmodified() {
 		return lastmodified;
@@ -84,18 +85,33 @@ public class Bookmark {
 	
 	
 	public String toString() {
-		return name + " --> " + url.toExternalForm();
+		return name + " --> " + url.toExternalForm() 
+		+ "(" + id +")";
 	}
-	public Folder getParent() {
-		return parent;
+	public Folder getParentFolder() {
+		return parentFolder;
 	}
-	public void setParent(Folder parent) {
-		this.parent = parent;
+	public void setParentFolder(Folder parent) {
+		this.parentFolder = parent;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	public String getId() {
+		return id;
 	}
 	
 	public void testStatus() {
 		//
 		setCheckflag(Bookmark.OK);
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

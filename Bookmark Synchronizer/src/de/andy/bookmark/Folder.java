@@ -6,6 +6,8 @@ public class Folder {
 	
 	private String name;
 	private String id;
+	private String description;
+	private boolean isToolbarFolder;
 	
 	public Folder(String id, String name) {
 		this.name = name;
@@ -36,6 +38,19 @@ public class Folder {
 	
 	public String toString() {
 		return name;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public boolean isToolbarFolder() {
+		return isToolbarFolder;
+	}
+	public void setToolbarFolder(boolean isToolbarFolder) {
+		this.isToolbarFolder = isToolbarFolder;
 	}
 	
 	

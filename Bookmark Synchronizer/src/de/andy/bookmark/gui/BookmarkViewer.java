@@ -134,11 +134,11 @@ public class BookmarkViewer extends JFrame implements TreeSelectionListener {
 	}
 	
 	
-	//FIXME catch NullPointer
 	public void valueChanged(TreeSelectionEvent e) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) l_bookmarks.getSelectionPath().getLastPathComponent();
 		if (node.isLeaf()) {
-			showBookmarkDetails((Bookmark)node.getUserObject());
+			if (node.getUserObject() instanceof Bookmark)
+				showBookmarkDetails((Bookmark)node.getUserObject());
 		}
 	}
 
