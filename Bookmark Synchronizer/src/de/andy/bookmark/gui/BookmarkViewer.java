@@ -1,7 +1,6 @@
 package de.andy.bookmark.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
@@ -22,7 +21,6 @@ import de.andy.bookmark.data.BookmarkCollection;
 import de.andy.bookmark.data.Folder;
 import de.andy.bookmark.importer.FirefoxImporter;
 import de.andy.bookmark.importer.ImporterException;
-import de.andy.bookmark.model.BookmarkTreeCellRenderer;
 import de.andy.bookmark.model.BookmarkTreeModel;
 
 public class BookmarkViewer extends JFrame implements TreeSelectionListener {
@@ -44,7 +42,7 @@ public class BookmarkViewer extends JFrame implements TreeSelectionListener {
 	JFileChooser chooser = new JFileChooser(new File("D:\\eclipse-work3.1"));
 
 	public BookmarkViewer() {
-		super("BookmarkViewer");
+		super("Simple Bookmark Viewer");
 		_initComponents();
 		_initActions();
 		refreshGUI();
@@ -109,7 +107,7 @@ public class BookmarkViewer extends JFrame implements TreeSelectionListener {
 //		scrollpane.setColumnHeaderView(new JLabel("Bookmarks"));
 		p_center.setLayout(new BorderLayout());
 		p_center.add(BorderLayout.CENTER, scrollpane);
-		p_south.add(b_refresh);
+//		p_south.add(b_refresh);
 		p_south.add(b_end);
 		this.getContentPane().setLayout(new BorderLayout());
 		this.getContentPane().add(BorderLayout.NORTH,p_north);

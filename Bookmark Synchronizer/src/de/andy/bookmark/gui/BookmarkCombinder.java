@@ -1,11 +1,12 @@
 package de.andy.bookmark.gui;
 
 import java.awt.BorderLayout;
-import javax.swing.JPanel;
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import java.awt.FlowLayout;
 import java.awt.CardLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class BookmarkCombinder extends JFrame {
 
