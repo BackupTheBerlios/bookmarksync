@@ -1,6 +1,8 @@
 package de.andy.bookmark.data;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 
@@ -25,7 +27,7 @@ public class Bookmark {
 	private String description = "";
 	private String shortcuturl = "";
 	private String icon_data = "";
-	private URL url;
+	private URI url;
 	private Date lastmodified;
 	private Date added;
 	private Folder folder;
@@ -43,9 +45,9 @@ public class Bookmark {
 	public Bookmark(String name, String url) {
 		this.name = name;
 		try {
-			this.url = new URL(url);
-		} catch (MalformedURLException e) {
-			//
+			this.url = new URI(url);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
 		}
 	}
 	public Date getAdded() {
@@ -78,17 +80,17 @@ public class Bookmark {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public URL getUrl() {
+	public URI getUrl() {
 		return url;
 	}
-	public void setUrl(URL url) {
+	public void setUrl(URI url) {
 		this.url = url;
 	}
 	
 	
 	public String toString() {
-		return name + " --> " + url.toExternalForm() 
-		+ "(" + id +")";
+		return name + " --> " + url 
+		+ " (" + id +")";
 	}
 	public Folder getParentFolder() {
 		return parentFolder;

@@ -8,8 +8,13 @@ import java.util.Iterator;
 
 import de.andy.bookmark.data.Bookmark;
 import de.andy.bookmark.data.BookmarkCollection;
+import de.andy.bookmark.data.Folder;
+import de.andy.bookmark.importer.FirefoxImporter;
 
 public class FirefoxExporter {
+	
+	private Folder currentFolder = null;
+	private Folder previousFolder = null;
 
 	/*
 	 * existing files will be overridden
@@ -27,10 +32,12 @@ public class FirefoxExporter {
 			writePrerequisits(bwriter);
 			Iterator iter = coll.iterator();
 			while (iter.hasNext()) {
-				writeItem(bwriter, (Bookmark)iter.next());
+				Object o = iter.next();				
+				writeItem(bwriter, (Bookmark)o);
 				bwriter.newLine();
 			}			
 //			writer.close();
+			bwriter.append("</DL><p>");
 			bwriter.close();
 		} catch (IOException e) {
 			throw new ExporterException(e.getMessage());
@@ -63,17 +70,25 @@ public class FirefoxExporter {
 		bwriter.append("<H1 LAST_MODIFIED=\"1122575250\">Bookmarks</H1>");
 		bwriter.newLine();
 		bwriter.newLine();
+		bwriter.append("<DL><p>");
+		bwriter.newLine();
 	}
-
+	
+	/*
+	 * write one Item
+	 * can be a single bookmark or a folder
+	 */
 	private void writeItem(BufferedWriter bwriter, Bookmark bookmark) throws IOException {
-		bwriter.append("");
-		System.out.println(bookmark);		
+		
+		bwriter.append("<DT><A HREF=\""+bookmark.getUrl()+"\""+">"+bookmark.getName()+"</A>");	
 	}
+	
+	
+	
 	
 	//testing only
 	public static void main(String[] args) throws Exception {
-		new FirefoxExporter().exportBookmarks(new BookmarkCollection()
-				,new File("d:\\test.bookmark"));
+		new FirefoxExporter().exportBookmarks(new FirefoxImporter().getBookmarks(new File("h:\\bookmarks.html")), new File("d:\\test.bookmark"));
 	}
 
 }
