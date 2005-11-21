@@ -16,7 +16,7 @@ public class FirefoxExporter {
 	
 	private Folder currentFolder = new Folder("");
 	private Stack folderStack = new Stack();
-	private int previousFolderDepth = Integer.MAX_VALUE;
+	private int previousFolderDepth = 0;
 
 	/*
 	 * existing files will be overridden
@@ -84,8 +84,8 @@ public class FirefoxExporter {
 	 */
 	private void writeItem(BufferedWriter bwriter, Bookmark bookmark) throws IOException {
 		if (!bookmark.getFolder().equals(folderStack.peek())) {
-			if (previousFolderDepth < bookmark.getDepth()) {
-				writeFolderEnd(bwriter,1);
+			if (previousFolderDepth >= bookmark.getDepth()) {
+				writeFolderEnd(bwriter,bookmark.getDepth()-previousFolderDepth);
 				folderStack.pop();
 				System.out.println("f end.");
 			}
