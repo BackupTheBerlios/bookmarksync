@@ -62,8 +62,12 @@ public class Bookmark {
 	public void setDepth(int depth) {
 		this.depth = depth;
 	}
+	
+	//must be never null!!!
 	public Folder getFolder() {
+		if (folder != null)
 		return folder;
+		else return Folder.EMPTY_FOLDER;
 	}
 	public void setFolder(Folder currentFolder) {
 		this.folder = currentFolder;

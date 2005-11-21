@@ -12,6 +12,8 @@ public class Folder {
 	private Date added;
 	private boolean isToolbarFolder;
 	
+	public static Folder EMPTY_FOLDER = new Folder("nope","!!!EMPTY_FOLDER!!!");
+	
 	public Folder(String id, String name) {
 		this.name = name;
 		this.id = id;

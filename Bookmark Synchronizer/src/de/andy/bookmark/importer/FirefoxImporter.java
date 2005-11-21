@@ -55,7 +55,7 @@ public class FirefoxImporter {
 				if (node instanceof DoctypeTag) {
 					checkDocType((DoctypeTag)node);
 				}
-				else throw new ImporterException("Not a bookmark file.");
+				else throw new ImporterException("Not a bookmark file. "+f.getName());
 			}
 			//read all bookmarks
 			while (iter.hasMoreNodes()) {
