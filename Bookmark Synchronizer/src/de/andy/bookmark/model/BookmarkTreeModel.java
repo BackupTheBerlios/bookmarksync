@@ -53,15 +53,16 @@ public class BookmarkTreeModel implements TreeModel {
 	public void setBookmarkCollection(BookmarkCollection coll) {
 		root.removeAllChildren();
 		//add Bookmarks
-		if (coll != null) {
-			Iterator iter = coll.iterator();
-			if (!iter.hasNext()) root.setUserObject("No Bookmarks here");
-			else root.setUserObject(coll.getName());
-			while (iter.hasNext()) {
-				DefaultMutableTreeNode node = new DefaultMutableTreeNode(iter.next());
-				findParent(node).add(node);
-			}
-		} else root.setUserObject("No Bookmarks here");
+		//TODO 1
+//		if (coll != null) {
+//			Iterator iter = coll.iterator();
+//			if (!iter.hasNext()) root.setUserObject("No Bookmarks here");
+//			else root.setUserObject(coll.getName());
+//			while (iter.hasNext()) {
+//				DefaultMutableTreeNode node = new DefaultMutableTreeNode(iter.next());
+//				findParent(node).add(node);
+//			}
+//		} else root.setUserObject("No Bookmarks here");
 		imodel.nodeStructureChanged(root);
 	}
 

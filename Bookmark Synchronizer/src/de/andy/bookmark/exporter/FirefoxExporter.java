@@ -32,13 +32,14 @@ public class FirefoxExporter {
 			writer = new FileWriter(f,false); //overrides the file!!!
 			BufferedWriter bwriter = new BufferedWriter(writer);
 			writePrerequisits(bwriter);
-			folderStack.push(Folder.EMPTY_FOLDER);
-			Iterator iter = coll.iterator();
-			while (iter.hasNext()) {
-				Object o = iter.next();				
-				writeItem(bwriter, (Bookmark)o);
-				bwriter.newLine();
-			}			
+			folderStack.push(Folder.ROOT_FOLDER);
+			//TODO 2
+//			Iterator iter = coll.iterator();
+//			while (iter.hasNext()) {
+//				Object o = iter.next();				
+//				writeItem(bwriter, (Bookmark)o);
+//				bwriter.newLine();
+//			}			
 //			writer.close();
 			bwriter.append("</DL><p>");
 			bwriter.close();
@@ -99,7 +100,7 @@ public class FirefoxExporter {
 	
 	//TODO add depth...!
 	private void writeFolderEnd(BufferedWriter bwriter, int depth) throws IOException {
-		if (!currentFolder.equals(Folder.EMPTY_FOLDER)) {
+		if (!currentFolder.equals(Folder.ROOT_FOLDER)) {
 			for (int i = 1; i <= depth; i++) {
 				bwriter.append("</DL><p>");//Folder end
 				bwriter.newLine();
@@ -109,7 +110,7 @@ public class FirefoxExporter {
 	
 	
 	private void writeFolder(BufferedWriter bwriter, Folder folder) throws IOException {
-		if (!folder.equals(Folder.EMPTY_FOLDER)) {
+		if (!folder.equals(Folder.ROOT_FOLDER)) {
 			bwriter.append("<DT><H3 ADD_DATE=\""+(folder.getAdded().getTime()/1000));
 			bwriter.append("\" LAST_MODIFIED=\""+(folder.getLastmodified().getTime()/1000)+"\"");
 			bwriter.append(" ID=\""+folder.getId()+"\">"+folder.getName()+"</H3>");

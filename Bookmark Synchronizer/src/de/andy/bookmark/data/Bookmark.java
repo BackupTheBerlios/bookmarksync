@@ -65,7 +65,7 @@ public class Bookmark {
 	public Folder getFolder() {
 		if (folder != null)
 		return folder;
-		else return Folder.EMPTY_FOLDER;
+		else return Folder.ROOT_FOLDER;
 	}
 	public void setFolder(Folder currentFolder) {
 		this.folder = currentFolder;

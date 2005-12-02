@@ -1,6 +1,8 @@
 package de.andy.bookmark.data;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class Folder {
@@ -12,7 +14,10 @@ public class Folder {
 	private Date added;
 	private boolean isToolbarFolder;
 	
-	public static Folder EMPTY_FOLDER = new Folder("nope","!!!EMPTY_FOLDER!!!");
+	private List children = new ArrayList();
+	private List bookmarks = new ArrayList(50);
+	
+	public static Folder ROOT_FOLDER = new Folder("nope","!!!ROOT!!!");
 	
 	public Folder(String id, String name) {
 		this.name = name;
@@ -74,5 +79,40 @@ public class Folder {
 		this.lastmodified = lastmodified;
 	}
 	
+	public void addChildFolder(Folder f) {
+		children.add(f);
+	}
+	
+	public Folder[] getChildren() {
+		return (Folder[])children.toArray();
+	}
+	
+	public boolean hasChildren() {
+		return children.isEmpty();
+	}
+	
+	public boolean hasBookmarks() {
+		return bookmarks.isEmpty();
+	}
+	
+	/*
+	 * Ausgehend vom Root-Folder den Folder mit der angegebenen id
+	 * suchen und zurückgeben.
+	 * Gibt null zurück, falls nichts gefunden.
+	 */
+	public static  Folder getFolder(String id) {
+		return null;
+	}
+	
+	/*
+	 * Fügt dem aktuelle Folder ein Bookmark hinzu.
+	 */
+	public void addBookmark(Bookmark b) {
+		bookmarks.add(b);
+	}
+	
+	public Bookmark[] getBookmarks() {
+		return (Bookmark[])bookmarks.toArray();
+	}
 	
 }
