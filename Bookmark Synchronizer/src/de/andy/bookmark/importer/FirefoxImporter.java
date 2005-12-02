@@ -23,6 +23,7 @@ import de.andy.bookmark.data.Folder;
  * 
  * Attributes not read:
  * - LAST_CHARSET
+ * - FAVICON data
  * 
  * @author Andreas
  *
@@ -45,6 +46,7 @@ public class FirefoxImporter {
 		if (!f.exists()) throw new ImporterException("File not found.");
 		if (!f.canRead()) throw new ImporterException("File not readable.");
 		bookmarks = new BookmarkCollection();
+		currentFolder = bookmarks.getRootFolder();
 		try {
 			Parser parser = new Parser(f.getAbsolutePath());
 			NodeIterator iter = parser.elements();
@@ -122,6 +124,7 @@ public class FirefoxImporter {
 		if (node instanceof TextNode) {
 			TextNode t = (TextNode)node;
 			folderStack.push(currentFolder);
+			Folder parent = currentFolder;
 			String id = tn.getAttribute("ID");
 			String toolbar = tn.getAttribute("PERSONAL_TOOLBAR_FOLDER");
 			Date d_added = getDate(tn.getAttribute("ADD_DATE"));
@@ -131,6 +134,7 @@ public class FirefoxImporter {
 			currentFolder.setToolbarFolder("true".equalsIgnoreCase(toolbar));
 			currentFolder.setAdded(d_added);
 			currentFolder.setLastmodified(d_lm);
+			parent.addChildFolder(currentFolder);
 			if (DEBUG) System.out.println(currentFolder);
 			lastAction = NEW_FOLDER;
 		}		 

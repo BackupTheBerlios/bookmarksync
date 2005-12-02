@@ -7,7 +7,11 @@ import java.util.Iterator;
 public class BookmarkCollection {
 	
 	private String name;
-	private Folder root = Folder.ROOT_FOLDER;
+	private Folder root = new Folder("!!!ROOT!!! $%&§$%§&$%§");
+	
+	public Folder getRootFolder() {
+		return root;
+	}
 	
 	public void setName(String n) {
 		name = n;
@@ -25,9 +29,14 @@ public class BookmarkCollection {
 		return false;
 	}
 
-	//my
-	public boolean add(Bookmark b) {
-		return false;
+	//an die richtige Stelle im Baum einfügen
+	public void add(Bookmark b) {
+		Folder f = b.getFolder();
+		f.addBookmark(b);
+	}
+	
+	public void addFolder(Folder parent, Folder child) {
+		parent.addChildFolder(child);
 	}
 	
 	//getDupps

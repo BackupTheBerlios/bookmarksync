@@ -141,11 +141,16 @@ public class BookmarkViewer extends JFrame implements TreeSelectionListener {
 	
 	
 	public void valueChanged(TreeSelectionEvent e) {
+		try {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) l_bookmarks.getSelectionPath().getLastPathComponent();
 		if (node.getUserObject() instanceof Bookmark)
 			showBookmarkDetails((Bookmark)node.getUserObject());
 		if (node.getUserObject() instanceof Folder)
 			showFolderDetails((Folder)node.getUserObject());
+		}
+		catch (Exception ex) {
+			//nothing to do here yet
+		}
 	}
 
 	private void showFolderDetails(Folder folder) {

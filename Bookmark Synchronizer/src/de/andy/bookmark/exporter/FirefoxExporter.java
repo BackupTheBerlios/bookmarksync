@@ -17,12 +17,14 @@ public class FirefoxExporter {
 	private Folder currentFolder = new Folder("");
 	private Stack folderStack = new Stack();
 	private int previousFolderDepth = 0;
+	private BookmarkCollection bookmarks;
 
 	/*
 	 * existing files will be overridden
 	 */
 	public void exportBookmarks(BookmarkCollection coll, File f)
 			throws ExporterException {
+		this.bookmarks = coll;
 		// check collection
 		if (coll == null)
 			throw new ExporterException("no collection to export");
@@ -32,23 +34,40 @@ public class FirefoxExporter {
 			writer = new FileWriter(f,false); //overrides the file!!!
 			BufferedWriter bwriter = new BufferedWriter(writer);
 			writePrerequisits(bwriter);
-			folderStack.push(Folder.ROOT_FOLDER);
-			//TODO 2
-//			Iterator iter = coll.iterator();
-//			while (iter.hasNext()) {
-//				Object o = iter.next();				
-//				writeItem(bwriter, (Bookmark)o);
-//				bwriter.newLine();
-//			}			
-//			writer.close();
+			bwriter.append("<DL><p>");
+			bwriter.newLine();
+			recuriveWriteFolder(coll.getRootFolder(),bwriter);
 			bwriter.append("</DL><p>");
+			bwriter.newLine();
 			bwriter.close();
+			writer.close();
 		} catch (IOException e) {
 			throw new ExporterException(e.getMessage());
-		}			
-		System.out.println("End.");
+		}
 	}
 	
+	private void recuriveWriteFolder(Folder startFolder, BufferedWriter bwriter) throws IOException {
+		if (startFolder.hasChildren()) {
+			//folderstart
+			bwriter.append("<DL><p>");
+			bwriter.newLine();
+			//jeden folder rekursiv
+			if (!startFolder.equals(bookmarks.getRootFolder())) writeFolder(bwriter, startFolder);
+			for (int i = 0; i < startFolder.getChildren().length; i++) {
+				recuriveWriteFolder(startFolder.getChildren()[i],bwriter);
+			}
+			//folderend
+			bwriter.append("</DL><p>");
+			bwriter.newLine();
+		}
+		if (startFolder.hasBookmarks()) {
+			Iterator iterator = startFolder.getBookmarkIterator();
+			while (iterator.hasNext()) {
+				writeBookmark(bwriter, (Bookmark)iterator.next());
+			}
+		}
+	}
+
 	/*
 	 * writes the head of the file
 	 */
@@ -79,47 +98,19 @@ public class FirefoxExporter {
 		bwriter.newLine();
 	}
 	
-	/*
-	 * write one Item
-	 * can be a single bookmark or a folder
-	 */
-	private void writeItem(BufferedWriter bwriter, Bookmark bookmark) throws IOException {
-		if (!bookmark.getFolder().equals(folderStack.peek())) {
-			if (previousFolderDepth >= bookmark.getDepth()) {
-				writeFolderEnd(bwriter,bookmark.getDepth()-previousFolderDepth);
-				folderStack.pop();
-				System.out.println("f end.");
-			}
-			writeFolder(bwriter, bookmark.getFolder());
-			System.out.println(bookmark.getFolder().getName()+"-->"+bookmark.getDepth());
-			folderStack.push(bookmark.getFolder());
-		}
+
+	private void writeBookmark(BufferedWriter bwriter, Bookmark bookmark) throws IOException {
 		bwriter.append("<DT><A HREF=\""+bookmark.getUrl()+"\""+">"+bookmark.getName()+"</A>");
-		previousFolderDepth = bookmark.getDepth();
+		bwriter.newLine();
 	}
-	
-	//TODO add depth...!
-	private void writeFolderEnd(BufferedWriter bwriter, int depth) throws IOException {
-		if (!currentFolder.equals(Folder.ROOT_FOLDER)) {
-			for (int i = 1; i <= depth; i++) {
-				bwriter.append("</DL><p>");//Folder end
-				bwriter.newLine();
-			}
-		}
-	}
-	
 	
 	private void writeFolder(BufferedWriter bwriter, Folder folder) throws IOException {
-		if (!folder.equals(Folder.ROOT_FOLDER)) {
 			bwriter.append("<DT><H3 ADD_DATE=\""+(folder.getAdded().getTime()/1000));
 			bwriter.append("\" LAST_MODIFIED=\""+(folder.getLastmodified().getTime()/1000)+"\"");
 			bwriter.append(" ID=\""+folder.getId()+"\">"+folder.getName()+"</H3>");
 			bwriter.newLine();
 	//		bwriter.append("<DD>Desc");
-	//		bwriter.newLine();
-			bwriter.append("<DL><p>");
-			bwriter.newLine();
-		}
+//			bwriter.newLine();
 	}
 	
 	//testing only

@@ -2,6 +2,7 @@ package de.andy.bookmark.data;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ public class Folder {
 	private List children = new ArrayList();
 	private List bookmarks = new ArrayList(50);
 	
-	public static Folder ROOT_FOLDER = new Folder("nope","!!!ROOT!!!");
+//	public static Folder ROOT_FOLDER = new Folder("nope","!!!ROOT!!!");
 	
 	public Folder(String id, String name) {
 		this.name = name;
@@ -44,6 +45,10 @@ public class Folder {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public boolean equals(Folder f) {
+		return id.equals(f.getId());
 	}
 	
 	public String toString() {
@@ -84,15 +89,23 @@ public class Folder {
 	}
 	
 	public Folder[] getChildren() {
-		return (Folder[])children.toArray();
+		Object[] tmp = children.toArray();
+		if (tmp != null) {
+			Folder[] ret = new Folder[tmp.length];
+			for (int i = 0; i < tmp.length; i++) {
+				ret[i] = (Folder) tmp[i];
+			}
+			return ret;
+		}
+		return null;
 	}
 	
 	public boolean hasChildren() {
-		return children.isEmpty();
+		return (!children.isEmpty());
 	}
 	
 	public boolean hasBookmarks() {
-		return bookmarks.isEmpty();
+		return !bookmarks.isEmpty();
 	}
 	
 	/*
@@ -100,7 +113,26 @@ public class Folder {
 	 * suchen und zurückgeben.
 	 * Gibt null zurück, falls nichts gefunden.
 	 */
-	public static  Folder getFolder(String id) {
+	public static  Folder getFolder(Folder root, String id) {
+		Folder tmp = getFolderFrom(root,id);
+		return tmp;
+	}
+	
+	/*
+	 * Rekursive Hilfsmethode für getFolder.
+	 */
+	private static Folder getFolderFrom(Folder start, String id) {
+		Folder tmp_f = null;
+		if (start.hasChildren()) {
+			Folder[] tmp = start.getChildren();
+			for (int i = 0; i < tmp.length; i++) {
+				if (tmp[i].getId().equals(id)) return tmp[i];
+			}
+			for (int i = 0; i < tmp.length; i++) {
+				if (tmp_f != null) return tmp_f;
+				if (tmp[i].getId().equals(id)) tmp_f = getFolderFrom(tmp[i],id);
+			}
+		}
 		return null;
 	}
 	
@@ -113,6 +145,10 @@ public class Folder {
 	
 	public Bookmark[] getBookmarks() {
 		return (Bookmark[])bookmarks.toArray();
+	}
+	
+	public Iterator getBookmarkIterator() {
+		return bookmarks.iterator();
 	}
 	
 }

@@ -10,6 +10,7 @@ import javax.swing.tree.TreePath;
 
 import de.andy.bookmark.data.Bookmark;
 import de.andy.bookmark.data.BookmarkCollection;
+import de.andy.bookmark.data.Folder;
 
 public class BookmarkTreeModel implements TreeModel {
 	
@@ -53,17 +54,30 @@ public class BookmarkTreeModel implements TreeModel {
 	public void setBookmarkCollection(BookmarkCollection coll) {
 		root.removeAllChildren();
 		//add Bookmarks
-		//TODO 1
-//		if (coll != null) {
-//			Iterator iter = coll.iterator();
-//			if (!iter.hasNext()) root.setUserObject("No Bookmarks here");
-//			else root.setUserObject(coll.getName());
-//			while (iter.hasNext()) {
-//				DefaultMutableTreeNode node = new DefaultMutableTreeNode(iter.next());
-//				findParent(node).add(node);
-//			}
-//		} else root.setUserObject("No Bookmarks here");
+		if (coll != null) {
+			//add folders and bookmarks recursively
+			addBookmarksAndFolders(root,coll.getRootFolder());
+		} else root.setUserObject("No Bookmarks here");
 		imodel.nodeStructureChanged(root);
+	}
+	
+	/*
+	 * Rekursive Hilfsfunktion für setBookmarkCollection()
+	 */
+	private void addBookmarksAndFolders(DefaultMutableTreeNode start, Folder f) {
+		if (f.hasChildren()) {
+			for (int i = 0; i < f.getChildren().length; i++) {
+				DefaultMutableTreeNode n = new DefaultMutableTreeNode(f.getChildren()[i]);
+				start.add(n);
+				addBookmarksAndFolders(n,f.getChildren()[i]);
+			}
+		}
+		if (f.hasBookmarks()) {
+			Iterator iter = f.getBookmarkIterator();
+			while (iter.hasNext()) {
+				start.add(new DefaultMutableTreeNode(iter.next()));
+			}
+		}
 	}
 
 	private DefaultMutableTreeNode findParent(DefaultMutableTreeNode node) {
