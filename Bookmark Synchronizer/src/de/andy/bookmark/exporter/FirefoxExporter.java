@@ -34,11 +34,7 @@ public class FirefoxExporter {
 			writer = new FileWriter(f,false); //overrides the file!!!
 			BufferedWriter bwriter = new BufferedWriter(writer);
 			writePrerequisits(bwriter);
-			bwriter.append("<DL><p>");
-			bwriter.newLine();
 			recuriveWriteFolder(coll.getRootFolder(),bwriter);
-			bwriter.append("</DL><p>");
-			bwriter.newLine();
 			bwriter.close();
 			writer.close();
 		} catch (IOException e) {
@@ -47,24 +43,28 @@ public class FirefoxExporter {
 	}
 	
 	private void recuriveWriteFolder(Folder startFolder, BufferedWriter bwriter) throws IOException {
-		if (startFolder.hasChildren()) {
-			//folderstart
+//		folderstart
+		if (!startFolder.equals(bookmarks.getRootFolder())) {
 			bwriter.append("<DL><p>");
 			bwriter.newLine();
+			writeFolder(bwriter, startFolder);
+		}
+		if (startFolder.hasChildren()) {			
 			//jeden folder rekursiv
-			if (!startFolder.equals(bookmarks.getRootFolder())) writeFolder(bwriter, startFolder);
 			for (int i = 0; i < startFolder.getChildren().length; i++) {
 				recuriveWriteFolder(startFolder.getChildren()[i],bwriter);
-			}
-			//folderend
-			bwriter.append("</DL><p>");
-			bwriter.newLine();
+			}			
 		}
 		if (startFolder.hasBookmarks()) {
 			Iterator iterator = startFolder.getBookmarkIterator();
 			while (iterator.hasNext()) {
 				writeBookmark(bwriter, (Bookmark)iterator.next());
 			}
+		}
+		if (!startFolder.equals(bookmarks.getRootFolder())) {
+//		folderend
+			bwriter.append("</DL><p>");
+			bwriter.newLine();
 		}
 	}
 
@@ -93,8 +93,6 @@ public class FirefoxExporter {
 		long timestamp = System.currentTimeMillis() / 1000;
 		bwriter.append("<H1 LAST_MODIFIED=\""+timestamp+"\">Bookmarks</H1>");
 		bwriter.newLine();
-		bwriter.newLine();
-		bwriter.append("<DL><p>");
 		bwriter.newLine();
 	}
 	
