@@ -2,9 +2,9 @@ package de.andy.bookmark.exporter;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Iterator;
+import java.io.OutputStreamWriter;
 import java.util.Stack;
 
 import de.andy.bookmark.data.Bookmark;
@@ -30,41 +30,43 @@ public class FirefoxExporter {
 		if (coll == null)
 			throw new ExporterException("no collection to export");
 		//open file
-		FileWriter writer;
-		try {
-			writer = new FileWriter(f,false); //overrides the file!!!
-			BufferedWriter bwriter = new BufferedWriter(writer);
-			writePrerequisits(bwriter);
-			recuriveWriteFolder(coll.getRootFolder(),bwriter);
-			bwriter.close();
-			writer.close();
+		FileOutputStream fileout;
+		try {			
+			fileout = new FileOutputStream(f,false); //overrides the file!!!
+			OutputStreamWriter ow = new OutputStreamWriter(fileout, "UTF-8"); 
+			BufferedWriter buffwriter = new BufferedWriter(ow);
+			writePrerequisits(buffwriter);
+			recuriveWriteFolder(coll.getRootFolder(),buffwriter);
+			buffwriter.close();
+			fileout.close();
 		} catch (IOException e) {
 			throw new ExporterException(e.getMessage());
 		}
 	}
 	
 	private void recuriveWriteFolder(Folder startFolder, BufferedWriter bwriter) throws IOException {
+		//folderstart
+		bwriter.append("<DL><p>");
+		bwriter.newLine();
+		if (!startFolder.equals(bookmarks.getRootFolder())) writeFolder(bwriter, startFolder);
 		Entry[] children = startFolder.getChildren();
 		if (children != null) {
-			for (int i = 0; i < startFolder.getChildren().length; i++) {
-				if (startFolder.getChildren()[i] instanceof Folder) {
-					//FOlder goes here
-//					folderstart
-					bwriter.append("<DL><p>");
-					bwriter.newLine();
-					//jeden folder rekursiv
-					if (!startFolder.equals(bookmarks.getRootFolder())) writeFolder(bwriter, startFolder);
-						recuriveWriteFolder((Folder)startFolder.getChildren()[i],bwriter);
-					//folderend
-					bwriter.append("</DL><p>");
-					bwriter.newLine();
+			for (int i = 0; i < children.length; i++) {
+				if (children[i] instanceof Folder) {
+					//Folder goes here
+					//jeden folder rekursiv					
+						recuriveWriteFolder((Folder)children[i],bwriter);
+					
 				}
-				else if (startFolder.getChildren()[i] instanceof Folder) {
+				else if (children[i] instanceof Bookmark) {
 					//Bookmark goes here
-					writeBookmark(bwriter, (Bookmark)startFolder.getChildren()[i]);
+					writeBookmark(bwriter, (Bookmark)children[i]);
 				}
 			}
-		}		
+		}	
+//		folderend
+		bwriter.append("</DL><p>");
+		bwriter.newLine();
 	}
 
 	/*
@@ -108,6 +110,7 @@ public class FirefoxExporter {
 			bwriter.newLine();
 	//		bwriter.append("<DD>Desc");
 //			bwriter.newLine();
+			
 	}
 	
 	//testing only

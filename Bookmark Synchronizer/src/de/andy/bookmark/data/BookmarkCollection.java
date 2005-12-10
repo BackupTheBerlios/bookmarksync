@@ -1,8 +1,5 @@
 package de.andy.bookmark.data;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 
 public class BookmarkCollection {
 	
@@ -32,7 +29,7 @@ public class BookmarkCollection {
 	//an die richtige Stelle im Baum einfügen
 	public void add(Bookmark b) {
 		Folder f = b.getFolder();
-		f.addChild(b);
+		if (f != null) f.addChild(b);
 	}
 	
 	public void addFolder(Folder parent, Folder child) {

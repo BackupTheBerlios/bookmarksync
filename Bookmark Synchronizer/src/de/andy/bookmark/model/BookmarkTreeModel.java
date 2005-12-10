@@ -1,7 +1,5 @@
 package de.andy.bookmark.model;
 
-import java.util.Iterator;
-
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -10,6 +8,7 @@ import javax.swing.tree.TreePath;
 
 import de.andy.bookmark.data.Bookmark;
 import de.andy.bookmark.data.BookmarkCollection;
+import de.andy.bookmark.data.Entry;
 import de.andy.bookmark.data.Folder;
 
 public class BookmarkTreeModel implements TreeModel {
@@ -56,7 +55,7 @@ public class BookmarkTreeModel implements TreeModel {
 		//add Bookmarks
 		if (coll != null) {
 			//add folders and bookmarks recursively
-//			addBookmarksAndFolders(root,coll.getRootFolder());
+			addBookmarksAndFolders(root,coll.getRootFolder());
 		} else root.setUserObject("No Bookmarks here");
 		imodel.nodeStructureChanged(root);
 	}
@@ -64,21 +63,21 @@ public class BookmarkTreeModel implements TreeModel {
 	/*
 	 * Rekursive Hilfsfunktion für setBookmarkCollection()
 	 */
-//	private void addBookmarksAndFolders(DefaultMutableTreeNode start, Folder f) {
-//		if (f.hasChildren()) {
-//			for (int i = 0; i < f.getChildren().length; i++) {
-//				DefaultMutableTreeNode n = new DefaultMutableTreeNode(f.getChildren()[i]);
-//				start.add(n);
-//				addBookmarksAndFolders(n,f.getChildren()[i]);
-//			}
-//		}
-//		if (f.hasBookmarks()) {
-//			Iterator iter = f.getBookmarkIterator();
-//			while (iter.hasNext()) {
-//				start.add(new DefaultMutableTreeNode(iter.next()));
-//			}
-//		}
-//	}
+	private void addBookmarksAndFolders(DefaultMutableTreeNode start, Folder f) {
+		Entry[] children = f.getChildren();
+		if (children != null) {
+			for (int i = 0; i < children.length; i++) {
+				if (children[i] instanceof Folder) {
+					DefaultMutableTreeNode n = new DefaultMutableTreeNode(f.getChildren()[i]);
+					start.add(n);
+					addBookmarksAndFolders(n,(Folder)f.getChildren()[i]);
+				}
+				else if (children[i] instanceof Bookmark) {
+					start.add(new DefaultMutableTreeNode(children[i]));
+				}
+			}
+		}
+	}
 
 	private DefaultMutableTreeNode findParent(DefaultMutableTreeNode node) {
 		DefaultMutableTreeNode superparent;

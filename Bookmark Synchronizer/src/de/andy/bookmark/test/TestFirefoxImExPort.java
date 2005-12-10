@@ -2,10 +2,10 @@ package de.andy.bookmark.test;
 
 import java.io.File;
 
+import junit.framework.TestCase;
 import de.andy.bookmark.data.BookmarkCollection;
 import de.andy.bookmark.exporter.FirefoxExporter;
 import de.andy.bookmark.importer.FirefoxImporter;
-import junit.framework.TestCase;
 
 public class TestFirefoxImExPort extends TestCase {
 	
