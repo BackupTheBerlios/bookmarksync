@@ -56,7 +56,7 @@ public class BookmarkTreeModel implements TreeModel {
 		//add Bookmarks
 		if (coll != null) {
 			//add folders and bookmarks recursively
-			addBookmarksAndFolders(root,coll.getRootFolder());
+//			addBookmarksAndFolders(root,coll.getRootFolder());
 		} else root.setUserObject("No Bookmarks here");
 		imodel.nodeStructureChanged(root);
 	}
@@ -64,21 +64,21 @@ public class BookmarkTreeModel implements TreeModel {
 	/*
 	 * Rekursive Hilfsfunktion für setBookmarkCollection()
 	 */
-	private void addBookmarksAndFolders(DefaultMutableTreeNode start, Folder f) {
-		if (f.hasChildren()) {
-			for (int i = 0; i < f.getChildren().length; i++) {
-				DefaultMutableTreeNode n = new DefaultMutableTreeNode(f.getChildren()[i]);
-				start.add(n);
-				addBookmarksAndFolders(n,f.getChildren()[i]);
-			}
-		}
-		if (f.hasBookmarks()) {
-			Iterator iter = f.getBookmarkIterator();
-			while (iter.hasNext()) {
-				start.add(new DefaultMutableTreeNode(iter.next()));
-			}
-		}
-	}
+//	private void addBookmarksAndFolders(DefaultMutableTreeNode start, Folder f) {
+//		if (f.hasChildren()) {
+//			for (int i = 0; i < f.getChildren().length; i++) {
+//				DefaultMutableTreeNode n = new DefaultMutableTreeNode(f.getChildren()[i]);
+//				start.add(n);
+//				addBookmarksAndFolders(n,f.getChildren()[i]);
+//			}
+//		}
+//		if (f.hasBookmarks()) {
+//			Iterator iter = f.getBookmarkIterator();
+//			while (iter.hasNext()) {
+//				start.add(new DefaultMutableTreeNode(iter.next()));
+//			}
+//		}
+//	}
 
 	private DefaultMutableTreeNode findParent(DefaultMutableTreeNode node) {
 		DefaultMutableTreeNode superparent;

@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-public class Folder {
+public class Folder extends Entry {
 	
 	private String name = "";
 	private String id;
@@ -16,9 +16,6 @@ public class Folder {
 	private boolean isToolbarFolder;
 	
 	private List children = new ArrayList();
-	private List bookmarks = new ArrayList(50);
-	
-//	public static Folder ROOT_FOLDER = new Folder("nope","!!!ROOT!!!");
 	
 	public Folder(String id, String name) {
 		this.name = name;
@@ -84,16 +81,16 @@ public class Folder {
 		this.lastmodified = lastmodified;
 	}
 	
-	public void addChildFolder(Folder f) {
+	public void addChild(Entry f) {
 		children.add(f);
 	}
 	
-	public Folder[] getChildren() {
+	public Entry[] getChildren() {
 		Object[] tmp = children.toArray();
 		if (tmp != null) {
-			Folder[] ret = new Folder[tmp.length];
+			Entry[] ret = new Entry[tmp.length];
 			for (int i = 0; i < tmp.length; i++) {
-				ret[i] = (Folder) tmp[i];
+				ret[i] = (Entry) tmp[i];
 			}
 			return ret;
 		}
@@ -102,10 +99,6 @@ public class Folder {
 	
 	public boolean hasChildren() {
 		return (!children.isEmpty());
-	}
-	
-	public boolean hasBookmarks() {
-		return !bookmarks.isEmpty();
 	}
 	
 	/*
@@ -124,31 +117,16 @@ public class Folder {
 	private static Folder getFolderFrom(Folder start, String id) {
 		Folder tmp_f = null;
 		if (start.hasChildren()) {
-			Folder[] tmp = start.getChildren();
+			Entry[] tmp = start.getChildren();
 			for (int i = 0; i < tmp.length; i++) {
-				if (tmp[i].getId().equals(id)) return tmp[i];
+				if (tmp[i].getId().equals(id)) return (Folder)tmp[i];
 			}
 			for (int i = 0; i < tmp.length; i++) {
 				if (tmp_f != null) return tmp_f;
-				if (tmp[i].getId().equals(id)) tmp_f = getFolderFrom(tmp[i],id);
+				if (tmp[i].getId().equals(id)) tmp_f = getFolderFrom((Folder)tmp[i],id);
 			}
 		}
 		return null;
-	}
-	
-	/*
-	 * Fügt dem aktuelle Folder ein Bookmark hinzu.
-	 */
-	public void addBookmark(Bookmark b) {
-		bookmarks.add(b);
-	}
-	
-	public Bookmark[] getBookmarks() {
-		return (Bookmark[])bookmarks.toArray();
-	}
-	
-	public Iterator getBookmarkIterator() {
-		return bookmarks.iterator();
 	}
 	
 }

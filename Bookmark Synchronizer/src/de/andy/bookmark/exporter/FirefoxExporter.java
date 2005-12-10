@@ -9,6 +9,7 @@ import java.util.Stack;
 
 import de.andy.bookmark.data.Bookmark;
 import de.andy.bookmark.data.BookmarkCollection;
+import de.andy.bookmark.data.Entry;
 import de.andy.bookmark.data.Folder;
 import de.andy.bookmark.importer.FirefoxImporter;
 
@@ -43,29 +44,27 @@ public class FirefoxExporter {
 	}
 	
 	private void recuriveWriteFolder(Folder startFolder, BufferedWriter bwriter) throws IOException {
-//		folderstart
-		if (!startFolder.equals(bookmarks.getRootFolder())) {
-			bwriter.append("<DL><p>");
-			bwriter.newLine();
-			writeFolder(bwriter, startFolder);
-		}
-		if (startFolder.hasChildren()) {			
-			//jeden folder rekursiv
+		Entry[] children = startFolder.getChildren();
+		if (children != null) {
 			for (int i = 0; i < startFolder.getChildren().length; i++) {
-				recuriveWriteFolder(startFolder.getChildren()[i],bwriter);
-			}			
-		}
-		if (startFolder.hasBookmarks()) {
-			Iterator iterator = startFolder.getBookmarkIterator();
-			while (iterator.hasNext()) {
-				writeBookmark(bwriter, (Bookmark)iterator.next());
+				if (startFolder.getChildren()[i] instanceof Folder) {
+					//FOlder goes here
+//					folderstart
+					bwriter.append("<DL><p>");
+					bwriter.newLine();
+					//jeden folder rekursiv
+					if (!startFolder.equals(bookmarks.getRootFolder())) writeFolder(bwriter, startFolder);
+						recuriveWriteFolder((Folder)startFolder.getChildren()[i],bwriter);
+					//folderend
+					bwriter.append("</DL><p>");
+					bwriter.newLine();
+				}
+				else if (startFolder.getChildren()[i] instanceof Folder) {
+					//Bookmark goes here
+					writeBookmark(bwriter, (Bookmark)startFolder.getChildren()[i]);
+				}
 			}
-		}
-		if (!startFolder.equals(bookmarks.getRootFolder())) {
-//		folderend
-			bwriter.append("</DL><p>");
-			bwriter.newLine();
-		}
+		}		
 	}
 
 	/*

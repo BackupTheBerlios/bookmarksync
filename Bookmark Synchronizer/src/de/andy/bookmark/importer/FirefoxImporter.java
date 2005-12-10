@@ -134,7 +134,7 @@ public class FirefoxImporter {
 			currentFolder.setToolbarFolder("true".equalsIgnoreCase(toolbar));
 			currentFolder.setAdded(d_added);
 			currentFolder.setLastmodified(d_lm);
-			parent.addChildFolder(currentFolder);
+			parent.addChild(currentFolder);
 			if (DEBUG) System.out.println(currentFolder);
 			lastAction = NEW_FOLDER;
 		}		 

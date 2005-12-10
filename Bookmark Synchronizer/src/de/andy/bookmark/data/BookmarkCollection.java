@@ -22,7 +22,7 @@ public class BookmarkCollection {
 	}
 
 	public boolean isEmpty() {
-		return root.hasBookmarks() || root.hasChildren();
+		return root.hasChildren();
 	}
 
 	public boolean contains(Object o) {
@@ -32,11 +32,11 @@ public class BookmarkCollection {
 	//an die richtige Stelle im Baum einfügen
 	public void add(Bookmark b) {
 		Folder f = b.getFolder();
-		f.addBookmark(b);
+		f.addChild(b);
 	}
 	
 	public void addFolder(Folder parent, Folder child) {
-		parent.addChildFolder(child);
+		parent.addChild(child);
 	}
 	
 	//getDupps

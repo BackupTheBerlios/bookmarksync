@@ -10,7 +10,7 @@ import java.util.Date;
  * @author Andreas
  *
  */
-public class Bookmark {
+public class Bookmark extends Entry {
 	
 	//Flags
 	public static final int UNCHECKED = 0;
@@ -40,6 +40,7 @@ public class Bookmark {
 	public void setCheckflag(int checkflag) {
 		this.checkflag = checkflag;
 	}
+	
 	public Bookmark(String name, String url) {
 		this.name = name;
 		try {
