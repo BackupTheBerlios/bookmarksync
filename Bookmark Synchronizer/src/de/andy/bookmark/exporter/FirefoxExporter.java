@@ -12,7 +12,15 @@ import de.andy.bookmark.data.BookmarkCollection;
 import de.andy.bookmark.data.Entry;
 import de.andy.bookmark.data.Folder;
 import de.andy.bookmark.importer.FirefoxImporter;
-
+/**
+ * Exports a given Collection to a Firefox-Bookmark-File.
+ * 
+ * ToDo:
+ * - add more fields for boomark/folder
+ * - export favicon data
+ * 
+ * @author Andreas
+ */
 public class FirefoxExporter {
 	
 	private Folder currentFolder = new Folder("");
@@ -98,19 +106,31 @@ public class FirefoxExporter {
 	}
 	
 
-	private void writeBookmark(BufferedWriter bwriter, Bookmark bookmark) throws IOException {
-		bwriter.append("<DT><A HREF=\""+bookmark.getUrl()+"\""+">"+bookmark.getName()+"</A>");
+	private void writeBookmark(BufferedWriter bwriter, Bookmark bookmark)
+			throws IOException {
+		bwriter.append("<DT><A HREF=\"");
+		bwriter.append(bookmark.getUrl().toString());
+		bwriter.append("\">");
+		bwriter.append(bookmark.getName());
+		bwriter.append("</A>");
 		bwriter.newLine();
 	}
 	
 	private void writeFolder(BufferedWriter bwriter, Folder folder) throws IOException {
-			bwriter.append("<DT><H3 ADD_DATE=\""+(folder.getAdded().getTime()/1000));
-			bwriter.append("\" LAST_MODIFIED=\""+(folder.getLastmodified().getTime()/1000)+"\"");
-			bwriter.append(" ID=\""+folder.getId()+"\">"+folder.getName()+"</H3>");
-			bwriter.newLine();
-	//		bwriter.append("<DD>Desc");
+			bwriter.append("<DT><H3 ADD_DATE=\"");
+			bwriter.append(String.valueOf(folder.getAdded().getTime()/1000));
+			bwriter.append("\" LAST_MODIFIED=\"");
+			bwriter.append(String.valueOf(folder.getLastmodified().getTime()/1000));
+			bwriter.append("\"");
+			bwriter.append(" ID=\"");
+			bwriter.append(folder.getId());
+			bwriter.append("\">");
+			bwriter.append(folder.getName());
+			bwriter.append("</H3>");
 //			bwriter.newLine();
-			
+			bwriter.append("<DD>");
+			bwriter.append(folder.getDescription());
+			bwriter.newLine();			
 	}
 	
 	//testing only

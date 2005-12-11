@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 import de.andy.bookmark.data.BookmarkCollection;
 import de.andy.bookmark.exporter.FirefoxExporter;
 import de.andy.bookmark.importer.FirefoxImporter;
+import de.andy.bookmark.model.BookmarkTreeModel;
 
 public class TestFirefoxImExPort extends TestCase {
 	
@@ -44,6 +45,8 @@ public class TestFirefoxImExPort extends TestCase {
 	public void testReImport() throws Exception {
 		coll = null;
 		coll = im.getBookmarks(outfile);
+		BookmarkTreeModel model = new BookmarkTreeModel();
+		model.setBookmarkCollection(coll);
 		assertNotNull(coll);
 	}
 

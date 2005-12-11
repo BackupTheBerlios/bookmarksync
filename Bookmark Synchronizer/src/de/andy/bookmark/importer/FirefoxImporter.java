@@ -49,6 +49,7 @@ public class FirefoxImporter {
 		currentFolder = bookmarks.getRootFolder();
 		try {
 			Parser parser = new Parser(f.getAbsolutePath());
+			parser.setEncoding("UTF-8");
 			NodeIterator iter = parser.elements();
 			Node node;
 			//check if bookmark file
